@@ -16,7 +16,7 @@ import Lesson from '../../../interfaces/Lesson';
     'dashborad-navigation-block' : DashboradNavigationBlock,
   },
   props: {
-    id: Number,
+    id: [Number, String],
   },
 })
 export class LessonPage extends vue {
