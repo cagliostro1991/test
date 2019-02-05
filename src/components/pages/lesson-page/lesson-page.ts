@@ -5,12 +5,13 @@ import { AppSidebar }               from '../../template/app-sidebar';
 import { DashboradNavigationBlock } from '../../template/dashborad-navigation-block';
 
 @Component({
-  template: require('./course-menu.html'),
+  template: require('./lesson-page.html'),
   components: {
     'app-sidebar' : AppSidebar,
     'dashborad-navigation-block' : DashboradNavigationBlock,
   },
 })
-export class CourseMenu extends vue {
+export class LessonPage extends vue {
 
+  
 }

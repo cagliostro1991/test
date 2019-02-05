@@ -7,8 +7,8 @@ vue.use(vueRouter);
 // Page components
 import { CertificateApplication } from '../components/pages/certificate-application';
 import { ChangePassword }         from '../components/pages/change-password';
-import { CourseMenu }             from '../components/pages/course-menu';
 import { CoursePage }             from '../components/pages/course-page';
+import { LessonPage }             from '../components/pages/lesson-page';
 import { ExtendCource }           from '../components/pages/extend-cource';
 import { LibraryPage }            from '../components/pages/library-page';
 import { MarksPage }              from '../components/pages/marks-page';
@@ -22,14 +22,14 @@ export default new vueRouter({
   routes: [
     {
       path: '/',
-      name: 'course.menu',
-      component: CourseMenu,
+      name: 'course',
+      component: CoursePage,
       beforeEnter: Guard.auth,
     },
     {
-      path: '/course-page',
-      name: 'course.page',
-      component: CoursePage,
+      path: '/lesson',
+      name: 'lesson',
+      component: LessonPage,
       beforeEnter: Guard.auth,
     },
     {
