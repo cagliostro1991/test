@@ -44,8 +44,11 @@ export class CoursePage extends vue {
     );
   }
 
-  // get course () {
-  //   return JSON.parse(this.courseData);
-  // }
+  isLesson(type) {
+    return (type === 'App\\Models\\Lesson') ? true : false;
+  }
 
+  isQuiz(type) {
+    return (type === 'App\\Models\\Quiz') ? true : false;
+  }
 }

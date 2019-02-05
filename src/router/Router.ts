@@ -27,9 +27,17 @@ export default new vueRouter({
       beforeEnter: Guard.auth,
     },
     {
-      path: '/lesson',
+      path: '/lesson/:id',
+      props: true,
       name: 'lesson',
       component: LessonPage,
+      beforeEnter: Guard.auth,
+    },
+    {
+      path: '/quiz/:id',
+      props: true,
+      name: 'quiz',
+      component: QuizPage,
       beforeEnter: Guard.auth,
     },
     {
@@ -66,13 +74,6 @@ export default new vueRouter({
       path: '/marks',
       name: 'marks',
       component: MarksPage,
-      beforeEnter: Guard.auth,
-    },
-
-    {
-      path: '/quiz',
-      name: 'quiz',
-      component: QuizPage,
       beforeEnter: Guard.auth,
     },
 
