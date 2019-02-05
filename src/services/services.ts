@@ -1,11 +1,9 @@
 const SERVICES = {
-  COOKIE      : Symbol('Cookie'),
-  AUTH        : Symbol('Auth'),
-  CUSTOMER    : Symbol('CustomerApiProviderInterface'),
-  TRANSLATION : Symbol('TranslationProviderInterface'),
-  MENUS       : Symbol('MenuProviderInterface'),
-  FORMAT      : Symbol('Format'),
-  SEARCH      : Symbol('SearchProviderInterface'),
+  COURSE : Symbol('Course'),
+  LESSON : Symbol('Lesson'),
+  QUIZ   : Symbol('Quiz'),
+  UNIT   : Symbol('Unit'),
+  MENUS  : Symbol('MenuProviderInterface'),
 };
 
 export default SERVICES;

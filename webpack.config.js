@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const env = require('./.env');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 const uglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const htmlWebpackPlugin = require('html-webpack-plugin');
@@ -91,6 +92,9 @@ module.exports = {
             from: 'public',
             to: '',
         }]),
+        new webpack.DefinePlugin({
+            'process.env': env,
+        }),
         new htmlWebpackPlugin({
             template: './src/index.html', // HTML Template load
             minify: process.env.NODE_ENV === 'production' ? {
@@ -109,11 +113,6 @@ module.exports = {
 if (process.env.NODE_ENV === 'production') {
     module.exports.devtool = '#source-map';
     module.exports.plugins = (module.exports.plugins || []).concat([
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"',
-            },
-        }),
         new uglifyJsPlugin({
             uglifyOptions: {
                 sourceMap: true,
