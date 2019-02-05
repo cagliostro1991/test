@@ -1,0 +1,146 @@
+.collapse { display: none;}
+.collapse.in { display: block;}
+
+.sidebar {
+	// display: table-cell;
+	// width: 310px;
+flex: 0 0 310px;
+position: relative;
+		padding-bottom:90px;
+
+	overflow: hidden;
+	transition:  ease-in-out 0.3s;
+	text-align: center;
+	background-color: $accent;
+	h3 {
+		text-transform: uppercase;
+		margin-bottom: 1em;
+		letter-spacing: -0.3px;
+	}
+	.user-info { 
+		text-align: left; 
+		background-color: $accent;
+		&:hover {
+			color: $link;
+		}
+		@media(max-width: 1430px){
+			+ .btn {
+				font-size: 12px;
+			}
+		}
+	}
+	.sidebar-menu {
+		list-style: none;
+		margin: 0;
+		padding: 40px 0;
+		text-align: left;
+		border-top: 1px solid $delimiter2;
+		background-color: $accent;
+		
+		li {
+			a{
+				text-transform: uppercase;
+				font-weight: bold;
+				font-size: 16px; 
+				display: block;
+				padding: 0.65em 30px;
+				color: $light;
+				border-bottom: 1px solid $delimiter2;
+				white-space: nowrap;
+				&:hover {
+					background-color: $accent2;
+				}
+				i {
+					font-size: 2em;
+					display: inline-block;
+					vertical-align: middle;
+					padding-bottom: 5px;
+					padding-right: 10px;
+					&:before{margin: 0;}
+				}
+			}
+			&:first-child{
+				border-top: 1px solid $delimiter2;
+			}
+		}
+		+ button{
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			left: 0;
+			z-index: 9999;
+			background-color: $accent2;
+			color: $light;
+			border: none;
+			font-size: 24px;
+			padding-bottom:35px;
+			padding-top:35px;
+			cursor: pointer;
+			transition: 0.3s ease-in-out;
+			transform-origin: center;
+			outline: none;
+			&:before{
+				display: inline-block;
+				transition: 0.3s ease-in-out;
+				transform-origin: center;
+				content: '\f100';
+				font-family: 'fontello';
+			}
+		}
+		@media(max-width: 1430px){
+			li {
+				a {
+					font-size: 12px;
+				}
+			}
+		}
+	}
+	&.toggle{ 
+		// display: block;
+		// width: 62px;
+		flex: 0 0 62px;
+		transition:  ease-in-out 0.3s;
+		.btn {display: none;}
+		.user-info {padding:8px;}
+		.sidebar-menu {
+			padding-top: 0;
+			margin-top: -1px;
+			li {
+				a{
+					padding-left: 20px;
+					i {
+						margin: 0;
+						padding-right: 20px;
+					}
+				}
+			}
+			+ button:before {
+				transform: rotate(180deg);
+				transition: 0.3s ease-in-out;
+			}
+		}
+	}
+	@media(max-width: 992px){
+		flex: 0 0 62px;
+		display: block;
+		&.toggle{ 
+			flex: 0 0 310px; 
+		}
+		.sidebar-menu {
+			padding-top: 0;
+			margin-top: -1px;
+			li {
+				a{
+					padding-left: 20px;
+					i {
+						margin: 0;
+						padding-right: 20px;
+					}
+				}
+			}
+		}
+		.btn {display: none;}
+		.user-info {padding:8px;}
+		
+	}
+}

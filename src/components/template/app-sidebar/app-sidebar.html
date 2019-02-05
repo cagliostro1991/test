@@ -1,0 +1,50 @@
+<div id="sidebar" class="sidebar">
+    <!-- User info -->
+    <router-link :to="{ name: 'user.profile'}" class="user-info">
+        <img src="images/avatar.jpg" alt="" />
+        <div class="user-detail">
+            <b>Jonathan Doe</b>
+            120 Hour
+            Comprehensive
+        </div>
+    </router-link>
+    <router-link :to="{ name: 'course.page'}" class="btn btn-accent with-icon-right">continue course</router-link>
+    <ul class="sidebar-menu">
+        <li>
+            <router-link :to="{ name: 'marks'}">
+                <i class="demo-icon icon-calculator"></i>Marks
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'course.page'}">
+                <i class="demo-icon icon-progress"></i>Progress %
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'course.menu'}">
+                <i class="demo-icon icon-education"></i>Course
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'cource.extend'}">
+                <i class="demo-icon icon-add-circular-outlined-button"></i>Extend Cource
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'user.profile'}">
+                <i class="demo-icon icon-edit-profile"></i>Edit Profile
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'user.change.password'}">
+                <i class="demo-icon icon-change--password"></i>Change Pasword
+            </router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'certificate'}">
+                <i class="demo-icon icon-certificate--application"></i>Certificate Application
+            </router-link>
+        </li>
+    </ul>
+    <button onclick="slideside()"></button>
+</div>

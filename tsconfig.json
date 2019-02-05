@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "module": "es2015",
+    "lib": [
+      "dom", "es2015", "dom.iterable", "scripthost",
+    ],
+    "moduleResolution": "node",
+    "target": "es2015",
+    "experimentalDecorators": true,
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
+  ]
+}

@@ -1,0 +1,25 @@
+<div class="dashborad-navigation-block">
+    <h2>Student Dashboard</h2>
+    <a href="#" class="btn btn-accent with-icon-right d-lg-none">continue course</a>
+    <nav class=" navbar navbar-expand-lg">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#dashborad-navigation" aria-controls="dashborad-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="dashborad-navigation">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <router-link :to="{ name: 'user.profile'}" class="nav-link library">Library</router-link>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link tutur" href="#">Ask a Tutur</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link jobs" href="#">Tefl Jobs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link support" href="#">Tech Support</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
