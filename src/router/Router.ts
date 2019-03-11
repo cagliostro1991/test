@@ -5,6 +5,7 @@ import Guard     from './Guard';
 vue.use(vueRouter);
 
 // Page components
+import { LoginPage }              from '../components/pages/login-page';
 import { CertificateApplication } from '../components/pages/certificate-application';
 import { ChangePassword }         from '../components/pages/change-password';
 import { CoursePage }             from '../components/pages/course-page';
@@ -25,6 +26,12 @@ export default new vueRouter({
       name: 'course',
       component: CoursePage,
       beforeEnter: Guard.auth,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginPage,
+      beforeEnter: Guard.guest,
     },
     {
       path: '/lesson/:id',

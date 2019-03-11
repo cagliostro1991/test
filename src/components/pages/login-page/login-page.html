@@ -1,0 +1,30 @@
+<div class="page_content_wrap">
+    <section class="section-main">
+        <div class="container-inner">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="extend-block">
+                        <h2 class="text-center">Login</h2>
+                        <div class="block-wh">
+                            <form>
+                                <p>
+                                    <label>Email</label>
+                                    <input v-model="email" />
+                                </p>
+                                <p>
+                                    <label>Password</label>
+                                    <input v-model="password" type="password" />
+                                </p>
+
+                                <span v-if="error.length > 0">
+                                    {{ error }}
+                                </span>
+                                <a @click="login()" class="btn btn-accent with-icon-right">Login</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -3,7 +3,8 @@ const SERVICES = {
   LESSON : Symbol('Lesson'),
   QUIZ   : Symbol('Quiz'),
   UNIT   : Symbol('Unit'),
-  MENUS  : Symbol('MenuProviderInterface'),
+  AUTH   : Symbol('Auth'),
+  USER   : Symbol('User'),
 };
 
 export default SERVICES;

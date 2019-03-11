@@ -2,17 +2,25 @@ import { injectable } from 'inversify';
 
 import axios, { AxiosPromise } from 'axios';
 
+import IocContainer from '../container/IocContainer';
+import SERVICES     from '../services/SERVICES';
+
 import Unit from '../interfaces/Unit';
+import Auth from '../interfaces/Auth';
 
 @injectable()
 export default class UnitsProvider implements Unit {
 
   http;
   path = '/units/';
+  auth = IocContainer.get<Auth>(SERVICES.AUTH);
 
   constructor () {
     this.http = axios.create({
       baseURL: process.env.API_URL,
+      headers: {
+        Accept: 'application/json',
+      },
     });
   }
 
@@ -20,13 +28,23 @@ export default class UnitsProvider implements Unit {
    * @returns {AxiosPromise<any>}
    */
   public async getUnits() {
-    return await this.http.get(this.path);
+    return await this.http.get(this.path, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer ' + this.auth.token(),
+      },
+    });
   }
 
   /**
    * @returns {AxiosPromise<any>}
    */
   public async getUnit(unit) {
-    return await this.http.get(this.path + unit);
+    return await this.http.get(this.path + unit, {
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer ' + this.auth.token(),
+      },
+    });
   }
 }

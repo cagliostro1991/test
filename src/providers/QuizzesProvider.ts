@@ -13,6 +13,9 @@ export default class QuizzesProvider implements Quiz {
   constructor () {
     this.http = axios.create({
       baseURL: process.env.API_URL,
+      headers: {
+        Accept: 'application/json',
+      },
     });
   }
 

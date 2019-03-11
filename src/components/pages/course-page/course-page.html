@@ -4,14 +4,14 @@
         <dashborad-navigation-block></dashborad-navigation-block>
         <div class="container-inner">
             <h2 class="container-title">Course</h2>
-            <template v-for="(course, course_index) in courseData">
-                <h2 class="container-title">{{ course_index + 1 }}. {{ course.title }}</h2>
+            <template v-for="(block, block_index) in courseData">
+                <h2 class="container-title">{{ block_index + 1 }}. {{ block.title }}</h2>
                 <div class="block-wh">
-                    <section v-for="(block, block_index) in course.units">
-                        <h3>{{ course_index + 1 }}.{{ block_index + 1 }}. {{ block.title }}</h3>
-                        <div v-for="(lesson, lesson_index) in block.content" class="section-inner">
+                    <section v-for="(unit, unit_index) in block.units">
+                        <h3>{{ block_index + 1 }}.{{ unit_index + 1 }}. {{ unit.title }}</h3>
+                        <div v-for="(lesson, lesson_index) in unit.content" class="section-inner">
                             <label>
-                                {{ course_index + 1 }}.{{ block_index + 1 }}.{{ lesson_index + 1 }} 
+                                {{ block_index + 1 }}.{{ unit_index + 1 }}.{{ lesson_index + 1 }}
                                 <router-link v-if="isLesson(lesson.type)" :to="{ name: 'lesson', params: { id: lesson.id }}">{{ lesson.title }}.</router-link>
 
                                 <router-link v-if="isQuiz(lesson.type)" :to="{ name: 'quiz', params: { id: lesson.id }}">{{ lesson.title }}.</router-link>
