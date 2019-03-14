@@ -4,16 +4,41 @@
     <section class="section-main">
         <dashborad-navigation-block></dashborad-navigation-block>
         <div class="container-inner">
-            <h2 class="container-title">Course</h2>
-            <h2 class="container-title">1. INTRODUCTION TO EFL</h2>
+            <h2 class="container-title">{{ courseTitle }}</h2>
+            <h3 class="container-title" v-if="blockUnit !== undefined">1. {{ blockUnit.title }}</h3>
+            <h4 class="container-title">1.1 INTRODUCTION TO EFL</h4>
             <div class="block-wh">
                 <h3>{{ lessonData.title }}</h3>
-                <div v-html="lessonData.body"></div>
+                <div v-if="passPrevious" v-html="lessonData.body"></div>
+                <div v-if="!passPrevious"> Back and finish previous lesson! </div>
                 <div class="pagination">
-                    <a href="#"><i class="demo-icon icon-left"></i>previous</a>
-                    <a href="#"><i class="demo-icon icon-up"></i>go to top</a>
-                    <a href="#"><i class="demo-icon icon-right"></i>next</a>
-                    <a @click="saveAndContinue()" class="btn btn-accent with-icon-right">save and continue</a>
+                    <!-- Previous Button -->
+                    <router-link v-if="isLesson(previousButtonIndex) && previousButtonDisplay"
+                                 :to="{ name: 'lesson', params: { id: lessonsData[previousButtonIndex].id }}">
+                        <i class="demo-icon icon-left"></i>previous
+                    </router-link>
+                    <router-link v-if="isQuiz(previousButtonIndex) && previousButtonDisplay"
+                                 :to="{ name: 'quiz',   params: { id: lessonsData[previousButtonIndex].id }}">
+                        <i class="demo-icon icon-left"></i>previous
+                    </router-link>
+
+                    <!-- Go To Top -->
+                    <a href="#">
+                        <i class="demo-icon icon-up"></i>go to top
+                    </a>
+
+                    <!-- Next Button -->
+                    <router-link v-if="isLesson(nextButtonIndex) && nextButtonDisplay && wasThere"
+                                 :to="{ name: 'lesson', params: { id: lessonsData[nextButtonIndex].id }}">
+                        <i class="demo-icon icon-right"></i>next
+                    </router-link>
+                    <router-link v-if="isQuiz(nextButtonIndex) && nextButtonDisplay && wasThere"
+                                 :to="{ name: 'quiz',   params: { id: lessonsData[nextButtonIndex].id }}">
+                        <i class="demo-icon icon-right"></i>next
+                    </router-link>
+
+                    <!-- Save and continue -->
+                    <a v-if="!wasThere && passPrevious" @click="saveAndContinue()" class="btn btn-accent with-icon-right">save and continue</a>
                 </div>
             </div>
         </div>

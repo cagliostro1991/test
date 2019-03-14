@@ -23,14 +23,13 @@ export default class AuthProvider implements Auth {
    */
   public async login(email, password) {
     return await this.http.post('/login/', {
-        email:    email,
-        password: password,
+      email:    email,
+      password: password,
     });
   }
 
   public logout() {
     localStorage.removeItem('token');
-
     window.location.href = process.env.PATH_HOME;
   }
 

@@ -18,34 +18,23 @@ import Unit   from '../../../interfaces/Unit';
   },
 })
 export class CoursePage extends vue {
-  courseData = [];
 
-  courseProvider = IocContainer.get<Course>(SERVICES.COURSE);
-  unitProvider   = IocContainer.get<Unit>(SERVICES.UNIT);
-
-  mounted() {
-    this.courseProvider.getCours(this.userCourse).then(
-      (response) => {
-        this.courseData = response.data.content;
-        this.courseData.forEach((block, i, course) => {
-          block.units.forEach((unit, j, block) => {
-            this.unitProvider.getUnit(unit.id).then(
-              (response) => {
-                this.$set(this.courseData[i].units[j], 'content', response.data.content);
-              },
-              (error) => { console.error(error); },
-            );
-          });
-        });
-      },
-      (error) => {
-        console.error(error);
-      },
-    );
+  get courseData() {
+    return this.$store.state.course;
   }
 
-  get userCourse() {
-    return this.$store.state.user.course_id;
+  get lessonsData() {
+    return this.$store.state.lessons;
+  }
+
+  get userProgress() {
+    return this.$store.state.progress;
+  }
+
+  wasThere(id) {
+    return (this.userProgress.map((lesson) => {
+      return lesson.id;
+    }).indexOf(id) >= 0);
   }
 
   isLesson(type) {

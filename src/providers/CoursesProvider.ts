@@ -40,11 +40,13 @@ export default class CoursesProvider implements Course {
    * @returns {AxiosPromise<any>}
    */
   public async getCours(cours) {
-    return await this.http.get(this.path + cours, {
-      headers: {
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + this.auth.token(),
-      },
-    });
+    if (cours) {
+      return await this.http.get(this.path + cours, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer ' + this.auth.token(),
+        },
+      });
+    }
   }
 }

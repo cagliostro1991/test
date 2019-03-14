@@ -15,7 +15,6 @@ export default class LessonsProvider implements Lesson {
   path = '/lessons/';
   auth = IocContainer.get<Auth>(SERVICES.AUTH);
 
-
   constructor () {
     this.http = axios.create({
       baseURL: process.env.API_URL,

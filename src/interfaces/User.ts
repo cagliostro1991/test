@@ -5,4 +5,5 @@ export default interface User {
   getUser();
   setUser(user);
   setUserPass(pass);
+  setUserProgress(pass);
 }

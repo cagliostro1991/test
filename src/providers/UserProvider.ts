@@ -71,4 +71,18 @@ export default class UserProvider implements User {
       },
     });
   }
+
+  /**
+   * @returns {AxiosPromise<any>}
+   */
+  public async setUserProgress(progress) {
+    return await this.http.post('/update-progress/', {
+      progress: progress,
+    },{
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer ' + this.auth.token(),
+      },
+    });
+  }
 }
