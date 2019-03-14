@@ -50,6 +50,17 @@ export class QuizPage extends vue {
       },
     );
   }
+  isLesson(buttonIndex) {
+    if (this.lessonsData[buttonIndex]) {
+      return (this.lessonsData[buttonIndex].type === 'App\\Models\\Lesson') ? true : false;
+    }
+  }
+
+  isQuiz(buttonIndex) {
+    if (this.lessonsData[buttonIndex]) {
+      return (this.lessonsData[buttonIndex].type === 'App\\Models\\Quiz') ? true : false;
+    }
+  }
 
   // Data
   get lessonsData() {
@@ -73,6 +84,29 @@ export class QuizPage extends vue {
     return this.userProgress.map((lesson) => {
       return lesson.id;
     }).indexOf(this.quizData.id);
+  }
+
+  // Buttons
+  get previousButtonIndex() {
+    if (this.lessonIndex > 0 && this.lessonIndex <= this.lessonsData.length - 1) {
+      return this.lessonIndex - 1;
+    }
+    return false;
+  }
+
+  get previousButtonDisplay() {
+    return (this.lessonIndex > 0 && this.lessonIndex <= this.lessonsData.length - 1) ? true : false;
+  }
+
+  get nextButtonIndex() {
+    if (this.lessonIndex >= 0 && this.lessonIndex < this.lessonsData.length - 1) {
+      return this.lessonIndex + 1;
+    }
+    return  false;
+  }
+
+  get nextButtonDisplay() {
+    return (this.lessonIndex >= 0 && this.lessonIndex < this.lessonsData.length - 1) ? true : false;
   }
 
   // Logic
