@@ -3,18 +3,31 @@
     <router-link :to="{ name: 'user.profile'}" class="user-info">
         <img src="/images/avatar.jpg" alt="" />
         <div class="user-detail">
-            <b>Jonathan Doe</b>
+            <b>{{ userData.name }} {{ userData.last_name }}</b>
             120 Hour
             Comprehensive
         </div>
     </router-link>
-    <router-link :to="{ name: 'course'}" class="btn btn-accent with-icon-right">continue course</router-link>
+    <!--<router-link :to="{ name: 'course'}" class="btn btn-accent with-icon-right">continue course</router-link>-->
+
+    <!-- Next Button -->
+    <router-link v-if="isLesson(nextLesson)"
+                 :to="{ name: 'lesson', params: { id: nextLesson.id }}"
+                 class="btn btn-accent with-icon-right">
+        continue course
+    </router-link>
+    <router-link v-if="isQuiz(nextLesson)"
+                 :to="{ name: 'quiz',   params: { id: nextLesson.id }}"
+                 class="btn btn-accent with-icon-right">
+        continue course
+    </router-link>
+
     <ul class="sidebar-menu">
-        <!--<li>-->
-            <!--<router-link :to="{ name: 'marks'}">-->
-                <!--<i class="demo-icon icon-calculator"></i>Marks-->
-            <!--</router-link>-->
-        <!--</li>-->
+        <li>
+            <router-link :to="{ name: 'marks'}">
+                <i class="demo-icon icon-calculator"></i>Marks
+            </router-link>
+        </li>
         <!--<li>-->
             <!--<router-link :to="{ name: 'marks'}">-->
                 <!--<i class="demo-icon icon-progress"></i>Progress %-->

@@ -29,6 +29,9 @@ export class QuizPage extends vue {
     title: String,
   };
 
+  checkedTrueFalse = null;
+  checkedTrueFalseWarning = false;
+
   quizProvider = IocContainer.get<Quiz>(SERVICES.QUIZ);
 
   mounted() {
@@ -50,17 +53,6 @@ export class QuizPage extends vue {
       },
     );
   }
-  isLesson(buttonIndex) {
-    if (this.lessonsData[buttonIndex]) {
-      return (this.lessonsData[buttonIndex].type === 'App\\Models\\Lesson') ? true : false;
-    }
-  }
-
-  isQuiz(buttonIndex) {
-    if (this.lessonsData[buttonIndex]) {
-      return (this.lessonsData[buttonIndex].type === 'App\\Models\\Quiz') ? true : false;
-    }
-  }
 
   // Data
   get lessonsData() {
@@ -69,67 +61,81 @@ export class QuizPage extends vue {
   get userProgress() {
     return this.$store.state.progress;
   }
-  get courseTitle() {
-    return this.$store.state.courseTitle;
-  }
 
   // DataIndexes
-  get lessonIndex() {
-    return this.lessonsData.map((lesson) => {
-      return lesson.id;
-    }).indexOf(this.quizData.id);
+  get quizIndex() {
+    return this.lessonsData.indexOf(this.lessonsData.find((lesson) => {
+      return lesson.id === this.quizData.id && lesson.type === 'App\\Models\\Quiz';
+    }));
   }
 
+  // // Logic
   get progressIndex() {
-    return this.userProgress.map((lesson) => {
-      return lesson.id;
-    }).indexOf(this.quizData.id);
+    return this.userProgress.indexOf(this.userProgress.find((lesson) => {
+      return lesson.id === this.quizData.id && lesson.type === 'App\\Models\\Quiz';
+    }));
   }
 
-  // Buttons
-  get previousButtonIndex() {
-    if (this.lessonIndex > 0 && this.lessonIndex <= this.lessonsData.length - 1) {
-      return this.lessonIndex - 1;
+  get curentQuestion() {
+    if (this.progressIndex === -1) {
+      return 0;
     }
-    return false;
-  }
+    if (this.progressIndex >= 0) {
 
-  get previousButtonDisplay() {
-    return (this.lessonIndex > 0 && this.lessonIndex <= this.lessonsData.length - 1) ? true : false;
-  }
-
-  get nextButtonIndex() {
-    if (this.lessonIndex >= 0 && this.lessonIndex < this.lessonsData.length - 1) {
-      return this.lessonIndex + 1;
     }
-    return  false;
-  }
-
-  get nextButtonDisplay() {
-    return (this.lessonIndex >= 0 && this.lessonIndex < this.lessonsData.length - 1) ? true : false;
-  }
-
-  // Logic
-  get wasThere() {
-    return (this.progressIndex >= 0)
-      && this.userProgress[this.progressIndex].type === 'App\\Models\\Quiz';
+    return 0;
   }
 
   get passPrevious() {
-    if (this.lessonIndex === 0) {
+    return true;
+    if (this.quizIndex === 0) {
       return true;
     }
-    if (this.lessonIndex >= 1) {
-      const prevProgressIndex = this.userProgress.map((lesson) => {
-        return lesson.id;
-      }).indexOf(this.lessonsData[this.lessonIndex - 1].id);
+    if (this.quizIndex >= 1) {
+      const pastLesson = (this.userProgress[this.quizIndex - 1] !== undefined) ?
+        this.userProgress[this.quizIndex - 1] : false;
 
-      if (this.userProgress[prevProgressIndex - 1] !== undefined) {
-        return (prevProgressIndex >= 0)
-          && this.userProgress[prevProgressIndex - 1].type === 'App\\Models\\Lesson';
+      if (pastLesson) {
+        return this.userProgress.indexOf(this.userProgress.find((lesson) => {
+          return lesson.id === pastLesson.id && lesson.type === pastLesson.type;
+        })) >= 0;
       }
       return false;
     }
+  }
+
+  nextQuestion() {
+    const data = { ... this.lessonsData[this.quizIndex] };
+
+    if (this.quizData.content[this.curentQuestion].type === 'true-false') {
+      if (this.checkedTrueFalse) {
+        this.checkedTrueFalseWarning = false;
+        if (this.progressIndex < 0) {
+          if (this.quizData.content[this.curentQuestion].type === 'true-false') {
+            data.answers[this.curentQuestion] = this.checkedTrueFalse;
+            this.$store.dispatch('saveLessonProgress', data);
+          }
+        } else {
+          data.answers = this.userProgress[this.progressIndex].answers;
+          data.answers[this.curentQuestion] = this.checkedTrueFalse;
+          this.$store.dispatch('saveLessonProgress', data);
+        }
+      } else {
+        this.checkedTrueFalseWarning = true;
+      }
+    }
+
+    //
+    //     //
+    //     // if (this.progressIndex === -1) {
+    //     //   if (this.quizData.content[this.curentQuestion].type === 'true-false') {
+    //     //     data.answers[this.curentQuestion] = this.checkedTrueFalse;
+    //     //   }
+    //     // }
+    //     // if (this.progressIndex >= 0) {
+    //     //
+    //     // }
+    //     // console.log(data);
   }
 
 }

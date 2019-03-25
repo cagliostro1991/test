@@ -114,8 +114,8 @@ const store = new vuex.Store({
       }
     },
 
-    saveLessonProgress({ commit }, lessonId) {
-      commit('SET_LESSON_PROGRESS', lessonId);
+    saveLessonProgress({ commit }, lesson) {
+      commit('SET_LESSON_PROGRESS', lesson);
     },
   },
 
@@ -153,8 +153,20 @@ const store = new vuex.Store({
       state.courseTitle = title;
     },
 
-    SET_LESSON_PROGRESS(state, lessonId) {
-      state.progress.push(lessonId);
+    SET_LESSON_PROGRESS(state, lesson) {
+      const progressIndex = state.progress.indexOf(state.progress.find((progressLesson) => {
+        return progressLesson.id === progressLesson.id &&
+          progressLesson.type === progressLesson.type;
+      }));
+
+      // Check if exist
+      if (progressIndex >= 0) {
+        state.progress[progressIndex] = lesson;
+      } else {
+        state.progress.push(lesson);
+      }
+
+      // Push to server
       userProvider.setUserProgress(JSON.stringify(state.progress));
     },
 

@@ -52,15 +52,15 @@ export class LessonPage extends vue {
 
   // DataIndexes
   get lessonIndex() {
-    return this.lessonsData.map((lesson) => {
-      return lesson.id;
-    }).indexOf(this.lessonData.id);
+    return this.lessonsData.indexOf(this.lessonsData.find((lesson) => {
+      return lesson.id === this.lessonData.id && lesson.type === 'App\\Models\\Lesson';
+    }));
   }
 
   get progressIndex() {
-    return this.userProgress.map((lesson) => {
-      return lesson.id;
-    }).indexOf(this.lessonData.id);
+    return this.userProgress.indexOf(this.userProgress.find((lesson) => {
+      return lesson.id === this.lessonData.id && lesson.type === 'App\\Models\\Lesson';
+    }));
   }
 
   // Titles
@@ -97,8 +97,7 @@ export class LessonPage extends vue {
 
   // Logic
   get wasThere() {
-    return (this.progressIndex >= 0)
-      && this.userProgress[this.progressIndex].type === 'App\\Models\\Lesson';
+    return (this.progressIndex >= 0);
   }
 
   get passPrevious() {
@@ -106,13 +105,12 @@ export class LessonPage extends vue {
       return true;
     }
     if (this.lessonIndex >= 1) {
-      const prevProgressIndex = this.userProgress.map((lesson) => {
-        return lesson.id;
-      }).indexOf(this.lessonsData[this.lessonIndex - 1].id);
-
-      if (this.userProgress[prevProgressIndex - 1] !== undefined) {
-        return (prevProgressIndex >= 0)
-          && this.userProgress[prevProgressIndex - 1].type === 'App\\Models\\Lesson';
+      const pastLesson =  (this.userProgress[this.lessonIndex - 1] !== undefined) ?
+        this.userProgress[this.lessonIndex - 1] : false;
+      if (pastLesson) {
+        return this.userProgress.indexOf(this.userProgress.find((lesson) => {
+          return lesson.id === pastLesson.id && lesson.type === pastLesson.type;
+        })) >= 0;
       }
       return false;
     }

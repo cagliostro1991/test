@@ -30,7 +30,11 @@ export class LoginPage extends vue {
         this.auth.authenticated(response.data.token);
         this.user.getUser().then(
           (response) => {
-            this.$store.dispatch('setUser', response.data.user);
+            this.$store.dispatch('setUser', response.data.user).then(
+              () => {
+                this.$store.dispatch('loadCourse');
+              },
+            );
             this.$router.push({ name: 'course' });
           },
           (error) => {

@@ -3,37 +3,50 @@
     <section class="section-main">
         <dashborad-navigation-block></dashborad-navigation-block>
         <div class="container-inner">
-            <h2 class=" accent">SCHOOLS AND OPPORTUNITIES EXAMINATION</h2>
-            <div class="block-wh quiz">
+            <h2 class=" accent">{{ quizData.title }}</h2>
+            <div class="block-wh quiz" v-if="!passPrevious"> Back and finish previous lesson! </div>
+            <div class="block-wh quiz" v-if="passPrevious">
+                <div v-for="(question, question_index) in quizData.content"
+                          v-if="question_index === curentQuestion"
+                          :key="question_index">
+                    <h2>{{ question_index + 1 }}. {{ question.question }}</h2>
+
+                    <div v-if="question.type == 'true-false'"
+                         class="btn-group1 btasn-group-toggle" data-toggle="buttons">
+
+                        <label class="btn">
+                            <input v-model="checkedTrueFalse"
+                                   type="radio" name="options" value="True"> <span>True</span>
+                        </label>
+                        <label class="btn">
+                            <input v-model="checkedTrueFalse"
+                                    type="radio" name="options" value="False"> <span>False</span>
+                        </label>
+                    </div>
+
+                    <p v-if="checkedTrueFalseWarning"> Choose the option</p>
+
+                    <button @click="nextQuestion()"
+                            class="btn btn-accent with-icon-right">next question</button>
+                </div>
+
+                <hr>
+
+                <div class="list-questions">
+                    <h3 class="accent">List of questions</h3>
+                    <ol>
+                        <li v-for="(question, question_index) in quizData.content" :key="question_index">
+                            {{ question.question }}
+                            <span v-if="question_index === curentQuestion" class="quest">?</span>
+                        </li>
+                    </ol>
+                </div>
+                <hr>
 
                 <div class="pagination">
-                    <!-- Previous Button -->
-                    <router-link v-if="isLesson(previousButtonIndex) && previousButtonDisplay"
-                                 :to="{ name: 'lesson', params: { id: lessonsData[previousButtonIndex].id }}">
-                        <i class="demo-icon icon-left"></i>previous
-                    </router-link>
-                    <router-link v-if="isQuiz(previousButtonIndex) && previousButtonDisplay"
-                                 :to="{ name: 'quiz',   params: { id: lessonsData[previousButtonIndex].id }}">
-                        <i class="demo-icon icon-left"></i>previous
-                    </router-link>
-
-                    <!-- Go To Top -->
-                    <a href="#">
-                        <i class="demo-icon icon-up"></i>go to top
-                    </a>
-
-                    <!-- Next Button -->
-                    <router-link v-if="isLesson(nextButtonIndex) && nextButtonDisplay && wasThere"
-                                 :to="{ name: 'lesson', params: { id: lessonsData[nextButtonIndex].id }}">
-                        <i class="demo-icon icon-right"></i>next
-                    </router-link>
-                    <router-link v-if="isQuiz(nextButtonIndex) && nextButtonDisplay && wasThere"
-                                 :to="{ name: 'quiz',   params: { id: lessonsData[nextButtonIndex].id }}">
-                        <i class="demo-icon icon-right"></i>next
-                    </router-link>
-
-                    <!-- Save and continue -->
-                    <a v-if="!wasThere && passPrevious" @click="saveAndContinue()" class="btn btn-accent with-icon-right">save and continue</a>
+                    <a href="#"><i class="demo-icon icon-left"></i>previous</a>
+                    <a href="#"><i class="demo-icon icon-up"></i>go to top</a>
+                    <router-link :to="{ name: 'course'}"><i class="demo-icon icon-education"></i>Course</router-link>
                 </div>
             </div>
         </div>
