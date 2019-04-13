@@ -20,6 +20,9 @@ import { PageNotFound }           from '../components/pages/page-not-found';
 export default new vueRouter({
   mode: 'history',
   base: process.env.PATH_BASE,
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
   routes: [
     {
       path: '/',

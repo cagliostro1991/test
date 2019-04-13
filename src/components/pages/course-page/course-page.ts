@@ -9,6 +9,8 @@ import SERVICES     from '../../../services/SERVICES';
 
 import Course from '../../../interfaces/Course';
 import Unit   from '../../../interfaces/Unit';
+import Quiz   from '../../../interfaces/Quiz';
+
 
 @Component({
   template: require('./course-page.html'),
@@ -29,12 +31,6 @@ export class CoursePage extends vue {
 
   get userProgress() {
     return this.$store.state.progress;
-  }
-
-  wasThere(id) {
-    return (this.userProgress.map((lesson) => {
-      return lesson.id;
-    }).indexOf(id) >= 0);
   }
 
   isLesson(type) {

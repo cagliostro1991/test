@@ -1,54 +1,72 @@
 <div class="page_content_wrap">
-    <app-sidebar></app-sidebar>
-    <section class="section-main">
-        <dashborad-navigation-block></dashborad-navigation-block>
-        <div class="container-inner">
-            <h2 class=" accent">{{ quizData.title }}</h2>
-            <div class="block-wh quiz" v-if="!passPrevious"> Back and finish previous lesson! </div>
-            <div class="block-wh quiz" v-if="passPrevious">
-                <div v-for="(question, question_index) in quizData.content"
-                          v-if="question_index === curentQuestion"
-                          :key="question_index">
-                    <h2>{{ question_index + 1 }}. {{ question.question }}</h2>
-
-                    <div v-if="question.type == 'true-false'"
-                         class="btn-group1 btasn-group-toggle" data-toggle="buttons">
-
-                        <label class="btn">
-                            <input v-model="checkedTrueFalse"
-                                   type="radio" name="options" value="True"> <span>True</span>
-                        </label>
-                        <label class="btn">
-                            <input v-model="checkedTrueFalse"
-                                    type="radio" name="options" value="False"> <span>False</span>
-                        </label>
-                    </div>
-
-                    <p v-if="checkedTrueFalseWarning"> Choose the option</p>
-
-                    <button @click="nextQuestion()"
-                            class="btn btn-accent with-icon-right">next question</button>
-                </div>
-
-                <hr>
-
-                <div class="list-questions">
-                    <h3 class="accent">List of questions</h3>
-                    <ol>
-                        <li v-for="(question, question_index) in quizData.content" :key="question_index">
-                            {{ question.question }}
-                            <span v-if="question_index === curentQuestion" class="quest">?</span>
-                        </li>
-                    </ol>
-                </div>
-                <hr>
-
-                <div class="pagination">
-                    <a href="#"><i class="demo-icon icon-left"></i>previous</a>
-                    <a href="#"><i class="demo-icon icon-up"></i>go to top</a>
-                    <router-link :to="{ name: 'course'}"><i class="demo-icon icon-education"></i>Course</router-link>
-                </div>
-            </div>
+  <app-sidebar></app-sidebar>
+  <section class="section-main">
+    <dashborad-navigation-block></dashborad-navigation-block>
+    <div class="container-inner">
+      <h2 class=" accent">{{ quizData.title }}</h2>
+      <div class="block-wh quiz" v-if="!passPrevious"> Back and finish previous lesson! </div>
+      <div class="block-wh quiz" v-if="passPrevious">
+        <div v-for="(question, question_index) in quizData.content" v-if="question_index === curentQuestion && !showResults" :key="question_index">
+          <h2>{{ question_index + 1 }}. {{ question.question }}</h2>
+          <!-- true-false -->
+          <div v-if="question.type == 'true-false'" class="btn-group1 btasn-group-toggle" data-toggle="buttons">
+            <label class="btn">
+              <input v-model="checkedTrueFalse" type="radio" name="options" value="True"> <span>True</span>
+            </label>
+            <label class="btn">
+              <input v-model="checkedTrueFalse" type="radio" name="options" value="False"> <span>False</span>
+            </label>
+          </div>
+          <!-- single -->
+          <div v-if="question.type == 'single'" class="btn-group1 btasn-group-toggle" data-toggle="buttons">
+            <label class="btn" v-for="(variant, variants_index) in question.variants">
+              <input v-model="checkedSingle" type="radio" name="options" :value="variants_index"> <span>{{ variant }}</span>
+            </label>
+          </div>
+          <p v-if="warning"> Choose the option</p>
+          <button @click="nextQuestion()" class="btn btn-accent with-icon-right">next question</button>
         </div>
-    </section>
+        <div v-if="showResults" class="block-wh quiz">
+          <h2 class="result-count">Your Result <div class="count">{{ checkResult() }} <span>Correct Answers</span></div>
+          </h2>
+          <div class="list-questions result">
+            <h3 class="accent">List of question</h3>
+            <ol>
+              <!-- single -->
+              <template v-for="(question, question_index) in quizData.content">
+                <li :class="calcCurrectWrongClass(question, question_index)"  v-if="question.type === 'single' || question.type == 'true-false'">
+                  {{ question.question }}
+                  <i v-if="checkQuestionResult(question, question_index)" class="demo-icon icon-ok-circle"></i>
+                  <i v-if="!checkQuestionResult(question, question_index)" class="demo-icon icon-cancel-circle"></i>
+                  <div class="answers" data-toggle="buttons">
+                    <label v-for="(variant, variants_index) in question.variants"
+                          :class="calcVariantsLabel(question, question_index, variants_index) + ' btn'">
+                      <input type="radio" name="options"><span>{{ variant }}</span>
+                    </label>
+                  </div>
+                </li>
+              </template>
+            </ol>
+          </div>
+          <hr>
+        </div>
+        <hr>
+        <div v-if="!showResults" class="list-questions">
+          <h3 class="accent">List of questions</h3>
+          <ol>
+            <li v-for="(question, question_index) in quizData.content" :key="question_index">
+              {{ question.question }}
+              <span v-if="question_index === curentQuestion" class="quest">?</span>
+            </li>
+          </ol>
+        </div>
+        <hr>
+        <div class="pagination">
+          <a href="#"><i class="demo-icon icon-left"></i>previous</a>
+          <a href="#"><i class="demo-icon icon-up"></i>go to top</a>
+          <router-link :to="{ name: 'course'}"><i class="demo-icon icon-education"></i>Course</router-link>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

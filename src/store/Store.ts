@@ -48,7 +48,6 @@ const store = new vuex.Store({
 
   // Outside communication with data.
   actions: {
-
     async loadUser({ commit }) {
       if (authProvider.isAuthenticated()) {
         await userProvider.getUser().then(
@@ -72,13 +71,22 @@ const store = new vuex.Store({
           commit('SET_COURSE', response.data.content);
           commit('SET_COURSE_TITLE', response.data.title);
 
-          response.data.content.forEach((block, i) => {
-            block.units.forEach((unit) => {
+          response.data.content.forEach((block) => {
+            block.units.forEach((unit, i) => {
               unitProvider.getUnit(unit.id).then(
                 (response) => {
                   response.data.content.forEach((lesson, j) => {
                     lesson.unitId = unit.id;
+                    lesson.orderUnit = j;
                     lesson.order = parseInt(i.toString() + j.toString(), 10);
+                    lesson.pass = (state.progress.indexOf(state.progress.find((l) => {
+                      return l.id === lesson.id && l.type === lesson.type;
+                    })) > -1)
+                    if (lesson.type === 'App\\Models\\Quiz' && lesson.pass) {
+                      lesson.result = state.progress.find((l) => {
+                        return l.id === lesson.id && l.type === lesson.type;
+                      }).result
+                    }
                     commit('ADD_LESSON', lesson);
                   });
                 },
@@ -155,12 +163,21 @@ const store = new vuex.Store({
 
     SET_LESSON_PROGRESS(state, lesson) {
       const progressIndex = state.progress.indexOf(state.progress.find((progressLesson) => {
-        return progressLesson.id === progressLesson.id &&
-          progressLesson.type === progressLesson.type;
+        return lesson.id === progressLesson.id && lesson.type === progressLesson.type;
       }));
 
+      const lessonIndex = state.lessons.indexOf(state.lessons.find((lessonState) => {
+        return lesson.id === lessonState.id && lesson.type === lessonState.type;
+      }));
+
+      // Set Pass
+      if (lesson.type === 'App\\Models\\Lesson') {
+        state.lessons[lessonIndex].pass = true;
+        lesson.pass                     = true;
+      }
+
       // Check if exist
-      if (progressIndex >= 0) {
+      if (progressIndex > -1) {
         state.progress[progressIndex] = lesson;
       } else {
         state.progress.push(lesson);

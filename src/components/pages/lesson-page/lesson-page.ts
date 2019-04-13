@@ -57,19 +57,32 @@ export class LessonPage extends vue {
     }));
   }
 
-  get progressIndex() {
-    return this.userProgress.indexOf(this.userProgress.find((lesson) => {
-      return lesson.id === this.lessonData.id && lesson.type === 'App\\Models\\Lesson';
-    }));
-  }
-
   // Titles
   get courseTitle() {
     return this.$store.state.courseTitle;
   }
 
-  get courseUnitTitle() {
-    return this.$store.state.courseTitle;
+  get blockTitle() {
+    if (this.lessonsData[this.lessonIndex]) {
+      return this.$store.state.course.find((course) => {
+        return course.units.find((unit) => {
+          return (unit.id == this.lessonsData[this.lessonIndex].unitId);
+        })
+      }).title;
+    }
+  }
+
+  get unitTitle() {
+    if (this.lessonsData[this.lessonIndex]) {
+      let units = this.$store.state.course.find((course) => {
+        return course.units.find((unit) => {
+          return (unit.id == this.lessonsData[this.lessonIndex].unitId);
+        })
+      });
+      return units.units.find((unit) => {
+        return (unit.id == this.lessonsData[this.lessonIndex].unitId);
+      }).title;
+    }
   }
 
   // Buttons
@@ -97,7 +110,9 @@ export class LessonPage extends vue {
 
   // Logic
   get wasThere() {
-    return (this.progressIndex >= 0);
+    if (this.lessonsData[this.lessonIndex]) {
+      return this.lessonsData[this.lessonIndex].pass;
+    }
   }
 
   get passPrevious() {
@@ -105,28 +120,17 @@ export class LessonPage extends vue {
       return true;
     }
     if (this.lessonIndex >= 1) {
-      const pastLesson =  (this.userProgress[this.lessonIndex - 1] !== undefined) ?
-        this.userProgress[this.lessonIndex - 1] : false;
+      const pastLesson = (this.userProgress[this.lessonIndex - 1] !== undefined) ? this.userProgress[this.lessonIndex - 1] : false;
+
       if (pastLesson) {
         return this.userProgress.indexOf(this.userProgress.find((lesson) => {
           return lesson.id === pastLesson.id && lesson.type === pastLesson.type;
-        })) >= 0;
+        })) > -1;
       }
       return false;
     }
   }
 
-  get blockUnit() {
-    if (this.lessonIndex) {
-      return this.$store.state.course.map((block) => {
-        return block.units[0];
-      }).filter((unit) => {
-        if (this.lessonsData[this.lessonIndex] !== undefined) {
-          return unit.id === this.lessonsData[this.lessonIndex].unitId;
-        }
-      })[0];
-    }
-  }
 
   // Functions
   loadData() {
@@ -142,6 +146,7 @@ export class LessonPage extends vue {
 
   saveAndContinue() {
     this.$store.dispatch('saveLessonProgress', this.lessonsData[this.lessonIndex]);
+
     if (this.isLesson(this.nextButtonIndex)) {
       this.$router.push({
         name: 'lesson',
