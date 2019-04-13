@@ -29,6 +29,8 @@ export default class UserProvider implements User {
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + this.auth.token(),
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
       },
     });
   }
@@ -54,6 +56,8 @@ export default class UserProvider implements User {
         headers: {
           Accept: 'application/json',
           Authorization: 'Bearer ' + this.auth.token(),
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
         },
       });
   }
@@ -68,6 +72,8 @@ export default class UserProvider implements User {
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + this.auth.token(),
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
       },
     });
   }
@@ -82,6 +88,8 @@ export default class UserProvider implements User {
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + this.auth.token(),
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
       },
     });
   }
