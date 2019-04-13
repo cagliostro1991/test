@@ -11,7 +11,7 @@ export default class AuthProvider implements Auth {
 
   constructor () {
     this.http = axios.create({
-      // baseURL: process.env.API_URL,
+      baseURL: process.env.API_URL,
       headers: {
         Accept: 'application/json',
         'Access-Control-Allow-Origin': '*',
