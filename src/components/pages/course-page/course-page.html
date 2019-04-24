@@ -19,7 +19,7 @@
                                 <router-link v-if="isQuiz(lesson.type)"   :to="{ name: 'quiz',   params: { id: lesson.id }}">{{ lesson.title }}.</router-link>
                             </label>
                             <span  v-if="isLesson(lesson.type) && lesson.pass" class="progress done">Complete</span>
-                            <span  v-if="isQuiz(lesson.type) && lesson.result" class="progress done">{{ lesson.result }}%</span>
+                            <span  v-if="isQuiz(lesson.type) && lesson.resultPercentage" class="progress done">{{ lesson.resultPercentage }}%</span>
                         </div>
                     </section>
                 </div>

@@ -3,68 +3,123 @@
   <section class="section-main">
     <dashborad-navigation-block></dashborad-navigation-block>
     <div class="container-inner">
-      <h2 class=" accent">{{ quizData.title }}</h2>
+      <h2 class="accent">{{ quizData.title }}</h2>
       <div class="block-wh quiz" v-if="!passPrevious"> Back and finish previous lesson! </div>
       <div class="block-wh quiz" v-if="passPrevious">
+        <!-- Question list-->
         <div v-for="(question, question_index) in quizData.content" v-if="question_index === curentQuestion && !showResults" :key="question_index">
-          <h2>{{ question_index + 1 }}. {{ question.question }}</h2>
           <!-- true-false -->
-          <div v-if="question.type == 'true-false'" class="btn-group1 btasn-group-toggle" data-toggle="buttons">
-            <label class="btn">
-              <input v-model="checkedTrueFalse" type="radio" name="options" value="True"> <span>True</span>
-            </label>
-            <label class="btn">
-              <input v-model="checkedTrueFalse" type="radio" name="options" value="False"> <span>False</span>
-            </label>
-          </div>
+          <template v-if="question.type == 'true-false'">
+            <h2>{{ question_index + 1 }}. {{ question.question }}</h2>
+            <div class="btn-group1 btasn-group-toggle" data-toggle="buttons">
+              <label class="btn">
+                <input v-model="checkedTrueFalse" type="radio" name="options" value="True">
+                <span>True</span>
+              </label>
+              <label class="btn">
+                <input v-model="checkedTrueFalse" type="radio" name="options" value="False">
+                <span>False</span>
+              </label>
+            </div>
+          </template>
           <!-- single -->
-          <div v-if="question.type == 'single'" class="btn-group1 btasn-group-toggle" data-toggle="buttons">
-            <label class="btn" v-for="(variant, variants_index) in question.variants">
-              <input v-model="checkedSingle" type="radio" name="options" :value="variants_index"> <span>{{ variant }}</span>
-            </label>
-          </div>
+          <template v-if="question.type == 'single'">
+            <h2>{{ question_index + 1 }}. {{ question.question }}</h2>
+            <div class="btn-group1 btasn-group-toggle" data-toggle="buttons">
+              <label class="btn" v-for="(variant, variants_index) in question.variants">
+                <input v-model="checkedSingle" type="radio" name="options" :value="variants_index">
+                <span>{{ variant }}</span>
+              </label>
+            </div>
+          </template>
+          <!-- fill-in-blank -->
+          <template v-if="question.type == 'fill-in-blank'">
+            <h2>{{ question_index + 1 }}. {{ question.question | addSpace() }}</h2>
+            <div class="list-questions">
+              <h4 class="accent">Please click the correct answers below to fill in the blanks.</h4>
+              <ul>
+                <li v-for="(variant, variants_index) in quizFillInBlankVariants" :class="checkedFillInBlankClass(variant)">
+                  <a @click.prevent="checkedFillInBlankSet(variant)" href="#">{{ variant }}</a>
+                </li>
+              </ul>
+            </div>
+          </template>
+          <!-- Warning & Action Buttons -->
           <p v-if="warning"> Choose the option</p>
           <button @click="nextQuestion()" class="btn btn-accent with-icon-right">next question</button>
         </div>
+        <!-- Results list-->
         <div v-if="showResults" class="block-wh quiz">
           <h2 class="result-count">Your Result <div class="count">{{ checkResult() }} <span>Correct Answers</span></div>
           </h2>
           <div class="list-questions result">
             <h3 class="accent">List of question</h3>
             <ol>
-              <!-- single -->
-              <template v-for="(question, question_index) in quizData.content">
-                <li :class="calcCurrectWrongClass(question, question_index)"  v-if="question.type === 'single' || question.type == 'true-false'">
+              <!-- Results single true-false -->
+              <template v-for="(question, question_index) in quizData.content" v-if="question.type === 'single' || question.type == 'true-false'">
+                <li :class="calcCurrectWrongClass(question, question_index)">
                   {{ question.question }}
                   <i v-if="checkQuestionResult(question, question_index)" class="demo-icon icon-ok-circle"></i>
                   <i v-if="!checkQuestionResult(question, question_index)" class="demo-icon icon-cancel-circle"></i>
                   <div class="answers" data-toggle="buttons">
-                    <label v-for="(variant, variants_index) in question.variants"
-                          :class="calcVariantsLabel(question, question_index, variants_index) + ' btn'">
+                    <label v-for="(variant, variants_index) in question.variants" :class="calcVariantsLabel(question, question_index, variants_index) + ' btn'">
                       <input type="radio" name="options"><span>{{ variant }}</span>
                     </label>
                   </div>
                 </li>
               </template>
+              <!-- Results single true-false -->
+              <template v-for="(question, question_index) in quizData.content" v-if="question.type === 'fill-in-blank'">
+                <li :class="calcCurrectWrongClass(question, question_index)">
+                  {{ question_index + 1 }}. {{ question.question | addSpace() }}
+                  <i v-if="checkQuestionResult(question, question_index)" class="demo-icon icon-ok-circle"></i>
+                  <i v-if="!checkQuestionResult(question, question_index)" class="demo-icon icon-cancel-circle"></i>
+                  <div class="row answers-fib">
+                    <div class="col-6">
+                      <div>Your Answer</div>
+                      <div v-for="(variant, variants_index) in question.result" v-if="checkQuestionResult(question, question_index)" :class="calcVariantsLabel(question, question_index, variants_index)" class="block">{{ variant }}</div>
+                      <div v-if="!checkQuestionResult(question, question_index)" class="block error">{{ userProgress[progressIndex].answers[question_index] }}</div>
+                    </div>
+                    <div class="col-6" v-if="!checkQuestionResult(question, question_index)">
+                      <div>Currect Answer</div>
+                      <div v-for="(variant, variants_index) in question.result" class="block">{{ variant }}</div>
+                    </div>
+                  </div>
+                </li>
+              </template>
             </ol>
           </div>
-          <hr>
         </div>
         <hr>
+        <!-- List of questions -->
         <div v-if="!showResults" class="list-questions">
           <h3 class="accent">List of questions</h3>
           <ol>
             <li v-for="(question, question_index) in quizData.content" :key="question_index">
-              {{ question.question }}
+              {{ question.question | addSpace() }}
               <span v-if="question_index === curentQuestion" class="quest">?</span>
             </li>
           </ol>
         </div>
         <hr>
         <div class="pagination">
-          <a href="#"><i class="demo-icon icon-left"></i>previous</a>
+          <!-- Previous Button -->
+          <router-link v-if="isLesson(previousButtonIndex) && previousButtonDisplay" :to="{ name: 'lesson', params: { id: lessonsData[previousButtonIndex].id }}">
+            <i class="demo-icon icon-left"></i>previous
+          </router-link>
+          <router-link v-if="isQuiz(previousButtonIndex) && previousButtonDisplay" :to="{ name: 'quiz',   params: { id: lessonsData[previousButtonIndex].id }}">
+            <i class="demo-icon icon-left"></i>previous
+          </router-link>
+          <!-- Go To Top -->
           <a href="#"><i class="demo-icon icon-up"></i>go to top</a>
           <router-link :to="{ name: 'course'}"><i class="demo-icon icon-education"></i>Course</router-link>
+          <!-- Next Button -->
+          <router-link v-if="isLesson(nextButtonIndex) && nextButtonDisplay && wasThere" :to="{ name: 'lesson', params: { id: lessonsData[nextButtonIndex].id }}">
+            <i class="demo-icon icon-right"></i>next
+          </router-link>
+          <router-link v-if="isQuiz(nextButtonIndex) && nextButtonDisplay && wasThere" :to="{ name: 'quiz',   params: { id: lessonsData[nextButtonIndex].id }}">
+            <i class="demo-icon icon-right"></i>next
+          </router-link>
         </div>
       </div>
     </div>

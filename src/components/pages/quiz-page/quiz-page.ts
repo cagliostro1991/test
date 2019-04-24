@@ -19,6 +19,11 @@ import Quiz from '../../../interfaces/Quiz';
   props: {
     id: [Number, String],
   },
+  filters: {
+    addSpace(value: any) {
+      return value.replace("@", "________________");
+    }
+  }
 })
 export class QuizPage extends vue {
   id;
@@ -32,8 +37,9 @@ export class QuizPage extends vue {
   curentQuestion = -1;
 
   warning = false;
-  checkedTrueFalse = null;
-  checkedSingle    = null;
+  checkedTrueFalse   = null;
+  checkedSingle      = null;
+  checkedFillInBlank = null;
 
   quizProvider = IocContainer.get<Quiz>(SERVICES.QUIZ);
 
@@ -42,6 +48,7 @@ export class QuizPage extends vue {
     this.loadData();
   }
 
+// Functions
   mounted() {
     this.loadData();
     this.$store.subscribe((mutation, state) => {
@@ -100,7 +107,7 @@ export class QuizPage extends vue {
   }
 
   checkQuestionResult(question, question_index) {
-    return question.result === this.userProgress[this.progressIndex].answers[question_index];
+    return question.result == this.userProgress[this.progressIndex].answers[question_index];
   }
 
   checkResult() {
@@ -135,6 +142,30 @@ export class QuizPage extends vue {
     return (corect/count)*100;
   }
 
+  checkedFillInBlankSet(variant) {
+    if (this.progressIndex > -1 && this.userProgress[this.progressIndex].answers.includes(variant)) {
+        this.warning = true;
+      } else {
+        this.warning = false;
+        this.checkedFillInBlank = variant;
+      }
+  }
+
+  checkedFillInBlankClass(variant) {
+    let classes = [];
+    if (this.quizData.content[0].type === 'fill-in-blank') {
+      if (this.checkedFillInBlank == variant) {
+        classes.push('answer');
+      }
+      if (this.progressIndex > -1) {
+        if (this.userProgress[this.progressIndex].answers.includes(variant)) {
+          classes.push('disable-option');
+        }
+      }
+    }
+    return classes;
+  }
+
   nextQuestion() {
     const data = { ... this.lessonsData[this.quizIndex] };
 
@@ -165,16 +196,39 @@ export class QuizPage extends vue {
           this.warning = true;
         }
         break;
+
+      case 'fill-in-blank':
+        if (this.checkedFillInBlank !== null) {
+          this.warning = false;
+          data.answers[this.curentQuestion] = this.checkedFillInBlank;
+          this.checkedFillInBlank = null;
+        } else {
+          this.warning = true;
+        }
+        break;
     }
 
     if (data.answers.length == this.quizData.content.length) {
-      data.result = this.countPercentage();
+      data.resultPercentage = this.countPercentage();
+      data.result = this.checkResult().split('/')[0];
     }
 
     this.$store.dispatch('saveLessonProgress', data);
   }
 
-  // Data
+  isLesson(buttonIndex) {
+    if (this.lessonsData[buttonIndex]) {
+      return (this.lessonsData[buttonIndex].type === 'App\\Models\\Lesson') ? true : false;
+    }
+  }
+
+  isQuiz(buttonIndex) {
+    if (this.lessonsData[buttonIndex]) {
+      return (this.lessonsData[buttonIndex].type === 'App\\Models\\Quiz') ? true : false;
+    }
+  }
+
+// Data
   get lessonsData() {
     return this.$store.state.lessons;
   }
@@ -183,14 +237,33 @@ export class QuizPage extends vue {
     return this.$store.state.progress;
   }
 
-  // DataIndexes
+  get quizFillInBlankVariants() {
+    let variants = [];
+    if (this.quizData.content[0].type === 'fill-in-blank') {
+      this.quizData.content.forEach((question) => {
+        question.result.forEach((result) => {
+          if (result) {
+            variants.push(result);
+          }
+        });
+        question.variants.forEach((variant) => {
+          if (variant) {
+            variants.push(variant);
+          }
+        });
+      });
+    }
+    return variants;
+  }
+
+// DataIndexes
   get quizIndex() {
     return this.lessonsData.indexOf(this.lessonsData.find((lesson) => {
       return lesson.id === this.quizData.id && lesson.type === 'App\\Models\\Quiz';
     }));
   }
 
-  // // Logic
+// Logic
   get progressIndex() {
     return this.userProgress.indexOf(this.userProgress.find((lesson) => {
       return lesson.id === this.quizData.id && lesson.type === 'App\\Models\\Quiz';
@@ -213,7 +286,36 @@ export class QuizPage extends vue {
     }
   }
 
+  get wasThere() {
+    if (this.lessonsData[this.quizIndex]) {
+      return this.lessonsData[this.quizIndex].pass;
+    }
+  }
+
   get showResults() {
     return (this.curentQuestion >= this.quizData.content.length);
+  }
+
+// Buttons
+  get previousButtonIndex() {
+    if (this.quizIndex > 0 && this.quizIndex <= this.lessonsData.length - 1) {
+      return this.quizIndex - 1;
+    }
+    return false;
+  }
+
+  get previousButtonDisplay() {
+    return (this.quizIndex > 0 && this.quizIndex <= this.lessonsData.length - 1) ? true : false;
+  }
+
+  get nextButtonIndex() {
+    if (this.quizIndex >= 0 && this.quizIndex < this.lessonsData.length - 1) {
+      return this.quizIndex + 1;
+    }
+    return false;
+  }
+
+  get nextButtonDisplay() {
+    return (this.quizIndex >= 0 && this.quizIndex < this.lessonsData.length - 1) ? true : false;
   }
 }

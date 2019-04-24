@@ -11,12 +11,7 @@ export default class AuthProvider implements Auth {
 
   constructor () {
     this.http = axios.create({
-      baseURL: process.env.API_URL,
-      headers: {
-        Accept: 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-      },
+      baseURL: process.env.API_URL
     });
   }
 
@@ -24,7 +19,7 @@ export default class AuthProvider implements Auth {
    * @returns {AxiosPromise<any>}
    */
   public async login(email, password) {
-    return await this.http.post('/login/', {
+    return await this.http.post('/login', {
       email:    email,
       password: password,
     });

@@ -18,6 +18,9 @@ export default class UserProvider implements User {
   constructor () {
     this.http = axios.create({
       baseURL: process.env.API_URL,
+      headers: {
+        Accept: 'application/json',
+      },
     });
   }
 
@@ -29,8 +32,6 @@ export default class UserProvider implements User {
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + this.auth.token(),
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
       },
     });
   }
@@ -56,8 +57,6 @@ export default class UserProvider implements User {
         headers: {
           Accept: 'application/json',
           Authorization: 'Bearer ' + this.auth.token(),
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
         },
       });
   }
@@ -72,8 +71,6 @@ export default class UserProvider implements User {
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + this.auth.token(),
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
       },
     });
   }
@@ -88,8 +85,6 @@ export default class UserProvider implements User {
       headers: {
         Accept: 'application/json',
         Authorization: 'Bearer ' + this.auth.token(),
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
       },
     });
   }
