@@ -79,22 +79,23 @@ export class QuizPage extends vue {
     }
   }
 
-  calcVariantsLabel(question, question_index, variants_index) {
+  calcVariantsLabel(question, question_index, variant) {
     if (this.checkQuestionResult(question, question_index)) {
-      if (variants_index === this.userProgress[this.progressIndex].answers[question_index]) {
+      if (variant === question.result) {
         return 'currect';
       } else {
         return '';
       }
     } else {
-      if (variants_index === this.userProgress[this.progressIndex].answers[question_index]) {
+      if (variant === question.result) {
         return 'currect';
       } else {
-        if (this.userProgress[this.progressIndex].answers[variants_index] === question.result) {
+        if (variant === this.userProgress[this.progressIndex].answers[question_index]) {
           return 'wrong';
+        } else {
+          return '';
         }
-        return '';
-    }
+      }
     }
   }
 
@@ -107,7 +108,9 @@ export class QuizPage extends vue {
   }
 
   checkQuestionResult(question, question_index) {
-    return question.result == this.userProgress[this.progressIndex].answers[question_index];
+    if (question.type === "single" && question.type === "true-false") {
+      return question.variants[question.result] === this.userProgress[this.progressIndex].answers[question_index];
+    }
   }
 
   checkResult() {
@@ -210,7 +213,7 @@ export class QuizPage extends vue {
 
     if (data.answers.length == this.quizData.content.length) {
       data.resultPercentage = this.countPercentage();
-      data.result = this.checkResult().split('/')[0];
+      data.result = this.checkResult().split('/');
     }
 
     this.$store.dispatch('saveLessonProgress', data);

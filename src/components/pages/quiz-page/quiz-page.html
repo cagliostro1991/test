@@ -27,7 +27,7 @@
             <h2>{{ question_index + 1 }}. {{ question.question }}</h2>
             <div class="btn-group1 btasn-group-toggle" data-toggle="buttons">
               <label class="btn" v-for="(variant, variants_index) in question.variants">
-                <input v-model="checkedSingle" type="radio" name="options" :value="variants_index">
+                <input v-model="checkedSingle" type="radio" name="options" :value="variant">
                 <span>{{ variant }}</span>
               </label>
             </div>
@@ -62,13 +62,13 @@
                   <i v-if="checkQuestionResult(question, question_index)" class="demo-icon icon-ok-circle"></i>
                   <i v-if="!checkQuestionResult(question, question_index)" class="demo-icon icon-cancel-circle"></i>
                   <div class="answers" data-toggle="buttons">
-                    <label v-for="(variant, variants_index) in question.variants" :class="calcVariantsLabel(question, question_index, variants_index) + ' btn'">
+                    <label v-for="(variant, variants_index) in question.variants" :class="calcVariantsLabel(question, question_index, variant) + ' btn'">
                       <input type="radio" name="options"><span>{{ variant }}</span>
                     </label>
                   </div>
                 </li>
               </template>
-              <!-- Results single true-false -->
+              <!-- Results  fill-in-blank -->
               <template v-for="(question, question_index) in quizData.content" v-if="question.type === 'fill-in-blank'">
                 <li :class="calcCurrectWrongClass(question, question_index)">
                   {{ question_index + 1 }}. {{ question.question | addSpace() }}
